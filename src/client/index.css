@@ -1,0 +1,471 @@
+@import "tailwindcss";
+
+/* Impeccable Design System for GrouptripLedger */
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --bg-app: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #F1F5F9;
+  --bg-dark-hero: #121829;
+  --bg-dark-card: #181F38;
+
+  --border-subtle: #E2E8F0;
+  --border-focus: #4F46E5;
+
+  --color-primary: #4F46E5;
+  --color-primary-hover: #4338CA;
+  --color-primary-light: #EEF2FF;
+
+  --color-success: #10B981;
+  --color-success-light: #ECFDF5;
+  --color-danger: #EF4444;
+  --color-danger-light: #FEF2F2;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FFFBEB;
+
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 30px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+  --shadow-dark: 0 16px 36px -4px rgba(18, 24, 41, 0.35);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* ============================================================
+   ANIMATION KEYFRAMES
+   ============================================================ */
+
+/* Entrance: fade up from slight offset */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Entrance: fade in only */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Modal entrance: scale from 96% + fade */
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Slide from right (slideover / screen transition) */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* Slide from left */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Screen-level page transition */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress bar fill: width animates from 0 via CSS transition,
+   this handles the initial entrance sweep */
+@keyframes barFill {
+  from { width: 0%; }
+}
+
+/* Ambient glow pulse for dark settle card */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    opacity: 0.15;
+  }
+  50% {
+    box-shadow: 0 0 40px 8px rgba(99, 102, 241, 0.25);
+    opacity: 0.35;
+  }
+}
+
+/* Shimmer skeleton loading sweep */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Icon micro-bounce on hover */
+@keyframes iconBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40%       { transform: translateY(-4px) scale(1.12); }
+  70%       { transform: translateY(1px) scale(0.97); }
+}
+
+/* Check-mark pop */
+@keyframes checkPop {
+  0%   { opacity: 0; transform: scale(0.5) rotate(-12deg); }
+  70%  { transform: scale(1.15) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Number counter subtle pulse when value changes */
+@keyframes numFlash {
+  0%   { opacity: 1; }
+  30%  { opacity: 0.35; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Nav indicator slide (active tab underline) */
+@keyframes navIndicator {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+
+/* Spinner (used in loading state) */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Floating ambient orb used in dark hero */
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(12px, -16px) scale(1.06); }
+  66%  { transform: translate(-8px, 8px) scale(0.95); }
+}
+
+/* ============================================================
+   ANIMATION UTILITY CLASSES
+   ============================================================ */
+
+/* Page-level screen enter — attach to each screen's root element */
+.page-enter {
+  animation: pageEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered fade-up cards */
+.anim-fade-up {
+  animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.anim-fade-in {
+  animation: fadeIn 0.3s ease both;
+}
+
+.anim-slide-left {
+  animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger delay helpers */
+.delay-0   { animation-delay: 0ms; }
+.delay-50  { animation-delay: 50ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-250 { animation-delay: 250ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-350 { animation-delay: 350ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-450 { animation-delay: 450ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+
+/* Shimmer skeleton */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #f1f5f9 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
+  border-radius: var(--radius-md);
+}
+
+/* Animated progress fill — apply to the filled bar element */
+.progress-fill {
+  animation: barFill 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Ambient glow orb inside dark card */
+.glow-orb {
+  animation: floatOrb 6s ease-in-out infinite, glowPulse 4s ease-in-out infinite;
+}
+
+/* Icon that bounces on parent hover */
+.icon-bounce-parent:hover .icon-bounce {
+  animation: iconBounce 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* Check pop (used when marking paid) */
+.check-pop {
+  animation: checkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Stat number flash on update */
+.num-update {
+  animation: numFlash 0.4s ease both;
+}
+
+/* Nav tab active indicator */
+.nav-active-bar {
+  transform-origin: left center;
+  animation: navIndicator 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ============================================================
+   ACCESSIBILITY: Respect reduced-motion preference
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Helpers */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.num-font {
+  font-feature-settings: 'tnum' on, 'lnum' on;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.card-dark {
+  background: var(--bg-dark-hero);
+  color: #FFFFFF;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-dark);
+}
+
+/* Button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--bg-dark-hero);
+  color: #FFFFFF;
+  border-color: var(--bg-dark-hero);
+}
+.btn-primary:hover {
+  background: #1e263d;
+  box-shadow: 0 4px 12px rgba(18, 24, 41, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-indigo {
+  background: var(--color-primary);
+  color: #FFFFFF;
+}
+.btn-indigo:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #FFFFFF;
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+.btn-secondary:hover {
+  background: var(--bg-card-subtle);
+  border-color: #CBD5E1;
+}
+
+.btn-danger {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border-color: #FECACA;
+}
+.btn-danger:hover {
+  background: #FEE2E2;
+}
+
+.btn-sm {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  font-size: 15px;
+  padding: 14px 24px;
+  border-radius: var(--radius-lg);
+}
+
+/* Badge & Pill styles */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.pill-active {
+  background: #EEF2FF;
+  color: #4F46E5;
+}
+
+.pill-settled {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.pill-unpaid {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.pill-warning {
+  background: #FFFBEB;
+  color: #D97706;
+}
+
+.pill-split {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #64748B;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Modals & Backdrops */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modal-slideover-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modal-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slideover-card {
+  background: #FFFFFF;
+  width: 100%;
+  max-width: 480px;
+  height: 100%;
+  overflow-y: auto;
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}

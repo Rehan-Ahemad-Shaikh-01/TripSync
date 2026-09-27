@@ -1,0 +1,17 @@
+export type TwinDestination = 'Goa' | 'Munnar' | 'Jaipur';
+export type TwinCategory = 'transport' | 'activities' | 'dining' | 'movement';
+
+const destinationData: Record<TwinDestination, { weather: string; temperature: number; reactions: string[]; places: string[]; baseline: Record<TwinCategory, number>; ideas: Record<TwinCategory, string[]> }> = {
+  Goa: { weather: 'Coastal showers', temperature: 29, reactions: ['“Beach time still sounds great”', '“Let’s keep a café nearby”', '“I’m up for the sunset walk”'], places: ['Candolim', 'Fort Aguada', 'Anjuna'], baseline: { transport: 1450, activities: 2400, dining: 1800, movement: 4 }, ideas: { transport: ['Bundle the north-coast stops into one shared cab loop.', 'Shift the beach hop later if showers build.'], activities: ['Keep the fort walk as a flexible outdoor slot.', 'Add a covered spice-market visit as a rain option.'], dining: ['Hold a shaded shack table near Candolim.', 'Move dinner closer to the group’s last stop.'], movement: ['Keep the group together for the coastal loop.', 'Use the café stop as a regroup point.'] } },
+  Munnar: { weather: 'Misty hill showers', temperature: 21, reactions: ['“Tea gardens in the mist!”', '“Save the waterfall stop for a clear gap”', '“Warm chai break, please”'], places: ['Tea Museum', 'Mattupetty Dam', 'Top Station'], baseline: { transport: 1850, activities: 1650, dining: 1250, movement: 3 }, ideas: { transport: ['Group the hill roads into one driver loop.', 'Avoid splitting into separate cars on wet bends.'], activities: ['Keep the plantation walk short during heavier rain.', 'Use the tea museum as the sheltered anchor.'], dining: ['Plan a warm local lunch near the museum.', 'Keep a flexible café stop after the dam.'], movement: ['Regroup at the tea museum between hill stops.', 'Slow the route around the dam if visibility drops.'] } },
+  Jaipur: { weather: 'Dry heat with a chance of evening rain', temperature: 34, reactions: ['“Amber Fort early, before the heat”', '“I want a relaxed bazaar wander”', '“Dinner on a haveli terrace”'], places: ['Hawa Mahal', 'City Palace', 'Amber Fort'], baseline: { transport: 950, activities: 2100, dining: 1950, movement: 5 }, ideas: { transport: ['Use one shared auto hop through the old city.', 'Keep the Amber Fort drive as a separate morning leg.'], activities: ['Start the fort visit before midday heat.', 'Swap the open-air walk for City Palace if rain starts.'], dining: ['Keep dinner near the final old-city stop.', 'Choose a shaded haveli courtyard for the group.'], movement: ['Walk the compact Pink City cluster together.', 'Schedule a shaded rest stop near City Palace.'] } },
+};
+
+export function getTwinScenario(destination: TwinDestination, rainfall: number) {
+  const data = destinationData[destination];
+  const rain = Math.max(0, Math.min(100, rainfall));
+  const multiplier = 1 + rain / 250;
+  const estimate = (category: TwinCategory) => Math.round(data.baseline[category] * (category === 'movement' ? Math.max(0.55, 1 - rain / 180) : multiplier));
+  const suggestions = (Object.keys(data.ideas) as TwinCategory[]).map(category => ({ category, text: data.ideas[category][rain > 60 ? 1 : 0], estimate: estimate(category) }));
+  return { weather: `${data.weather} · ${rain}% simulated rainfall`, temperature: data.temperature - Math.round(rain / 40), reactions: data.reactions, places: data.places, estimates: { transport: estimate('transport'), activities: estimate('activities'), dining: estimate('dining'), movement: estimate('movement') }, suggestions };
+}
